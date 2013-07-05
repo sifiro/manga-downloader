@@ -13,20 +13,6 @@ If you have problems downloading, please check your internet connection first.
 If that's not the problem, the site has probably changed internally, so please submit a bug report at github.com/briefbanane/mangareader.net-downloader
 
 The script will create following directory structure:
-directory-where-you-ran-the-script
-|-manga-name
-  |-chapter-1
-  | |-page-001.jpg
-  | |-page-002.jpg
-  | |-page-003.jpg
-  ...
-  | |-page-xxx.jpg
-  |-chapter-2
-    |-page-001.jpg
-    ...
-  | |-page-xxx.jpg
-  ...
-  |-chapter-xxx
-  ...
+directory-where-you-ran-the-script/manga-name/chapter-xxx/page-xxx.jpg
 
 Happy reading!
