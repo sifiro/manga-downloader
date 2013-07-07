@@ -6,6 +6,10 @@ if [ ! $url ]
 then
         echo "Usage $0 URL"
 else
+        if [ `echo $url | cut -d / -f 1` != `echo http:` -a `echo $url | cut -d / -f 1` != `echo https:` ]
+        then
+                url=`echo http://$url`
+        fi
         mangaid=`echo $url | cut -d / -f 4 | cut -d - -f 1`
         chapterid=`echo $url | cut -d / -f 4 | cut -d - -f 2`
         pagenum=`echo $url | cut -d / -f 4 | cut -d - -f 3`
