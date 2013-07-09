@@ -10,7 +10,7 @@ For example ./mangareader.net-downloader http://www.mangareader.net/93-2-1/narut
 Note: The URL must indicate a page of the manga, manga description pages like http://www.mangareader.net/93/naruto.html won't work.
 
 If you have problems downloading, please check your internet connection first.
-If that's not the problem, the site has probably changed internally, so please submit a bug report at github.com/briefbanane/mangareader.net-downloader
+If that's not the problem, the site has probably changed internally, so please submit a bug report at github.com/briefbanane/manga-downloader
 
 The script will create following directory structure:
 directory-where-you-ran-the-script/manga-name/chapter-xxx/page-xxx.jpg
