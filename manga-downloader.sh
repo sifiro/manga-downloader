@@ -2,6 +2,11 @@
 #Copyright 2013 Fabian Ebner
 #Published under the GPLv3 or any later version, see the file COPYING for details
 
+function imgurl_www_mangareader_net()
+{
+	imgurl=`cat temporary.html | awk '{split($0,a,"<img");$1=a[2];print $1}' | awk '{split($0,a,"src=\"");$1=a[2];print $1}' | awk '{split($0,a,"\"");$1=a[1];print $1}' | grep $manganame`
+}
+
 function base_manganame_chapternum_pagenum_downloader()
 {
 	mkdir -p $manganame
@@ -29,8 +34,15 @@ function base_manganame_chapternum_pagenum_downloader()
 			wgetreturn=$?
 			if [ $wgetreturn -eq 0 ]
 			then
-				imgurl=`cat temporary.html | awk '{split($0,a,"<img");$1=a[2];print $1}' | awk '{split($0,a,"src=\"");$1=a[2];print $1}' | awk '{split($0,a,"\"");$1=a[1];print $1}'`
+				$imgurl_function
 				rm -f temporary.html
+				if [ -z $imgurl ]
+				then
+					cd ..
+					echo "All Chapters (`expr $chapternum - 1`) downloaded"
+					rmdir chapter-$chapternum
+					exit 0
+				fi
 				if [ $pagenum -lt 100 ]
 					then
 					if [ $pagenum -lt 10 ]
@@ -45,7 +57,7 @@ function base_manganame_chapternum_pagenum_downloader()
 				wgetreturn=$?
 				if [ $wgetreturn -ne 0 ]
 				then
-					echo "This shouldn't happen, please submit a bug report at github.com/briefbanane/manga-downloader"
+					echo "This shouldn't happen. Please report a bug at github.com/briefbanane/manga-downloader"
 					echo "and include the last URL: $url and image-URL: $imgurl"
 					exit 1
 				else
@@ -101,6 +113,7 @@ else
 			exit 1
 		fi
 		base="www.mangareader.net"
+		imgurl_function="imgurl_www_mangareader_net"
 		base_manganame_chapternum_pagenum_downloader
 	fi
 fi
