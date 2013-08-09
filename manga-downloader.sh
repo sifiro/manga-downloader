@@ -107,6 +107,11 @@ else
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=1
+		elif [ `echo $url | grep -E ^http://www\.mangareader\.net/[^/]*$` ]
+		then
+			manganame=`echo $url | cut -d / -f 4`
+			chapternum=1
+			pagenum=1
 		else
 			echo "Cannot handle URL, please report a bug at github.com/briefbanane/manga-donwloader"
 			echo "and include the URL: $url"
