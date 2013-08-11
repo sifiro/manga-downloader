@@ -2,7 +2,7 @@
 #Copyright 2013 Fabian Ebner
 #Published under the GPLv3 or any later version, see the file COPYING for details
 
-function imgurl_www_mangareader_net()
+function imgurl_firstimgtag()
 {
 	imgurl=`cat temporary.html | awk '{split($0,a,"<img");$1=a[2];print $1}' | awk '{split($0,a,"src=\"");$1=a[2];print $1}' | awk '{split($0,a,"\"");$1=a[1];print $1}' | grep $manganame`
 }
@@ -85,29 +85,32 @@ else
 		url="http://$url"
 	fi
 
-	if [ `echo $url | grep -E ^http://www.mangareader.net/*` ]
-	then
-		if [ `echo $url | grep -E ^http://www\.mangareader\.net/[0-9]*-[0-9]*-[0-9]*/[^/]*/chapter-[0-9]*\.html` ]
+	base=`echo $url | cut -d / -f 3`
+	case $base in
+	"www.mangareader.net" | "www.mangapanda.com")
+		site=`echo $base | cut -d . -f 2`
+		tld=`echo $base | cut -d . -f 3`
+		if [ `echo $url | grep -E ^http://www\.$site\.$tld/[0-9]*-[0-9]*-[0-9]*/[^/]*/chapter-[0-9]*\.html` ]
 		then
 			manganame=`echo $url | cut -d / -f 5`
 			chapternum=`echo $url | cut -d / -f 6 | cut -d - -f 2 | cut -d . -f 1`
 			pagenum=`echo $url | cut -d / -f 4 | cut -d - -f 3`
-		elif [ `echo $url | grep -E ^http://www\.mangareader\.net/[0-9]*/[^/]*.html` ]
+		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[0-9]*/[^/]*.html` ]
 		then
 			manganame=`echo $url | cut -d / -f 5 | awk '{split($0,a,".html");$1=a[1];print $1}'`
 			chapternum=1
 			pagenum=1
-		elif [ `echo $url | grep -E ^http://www\.mangareader\.net/[^/]*/[0-9]*/[0-9]*` ]
+		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*/[0-9]*/[0-9]*` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=`echo $url | cut -d / -f 6`
-		elif [ `echo $url | grep -E ^http://www\.mangareader\.net/[^/]*/[0-9]*` ]
+		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*/[0-9]*` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=1
-		elif [ `echo $url | grep -E ^http://www\.mangareader\.net/[^/]*$` ]
+		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*$` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=1
@@ -117,8 +120,8 @@ else
 			echo "and include the URL: $url"
 			exit 1
 		fi
-		base="www.mangareader.net"
-		imgurl_function="imgurl_www_mangareader_net"
+		imgurl_function="imgurl_firstimgtag"
 		base_manganame_chapternum_pagenum_downloader
-	fi
+		;;
+	esac
 fi
