@@ -25,7 +25,7 @@ function base_manganame_chapternum_pagenum_downloader()
 		wgetreturn=$?
 		if [ $wgetreturn -ne 0 ]
 		then
-			echo "All Chapters (`expr $chapternum - 1`) downloaded"
+			echo "All chapters (`expr $chapternum - 1`) downloaded"
 			rm -f temporary.html
 			exit 0
 		fi
@@ -44,7 +44,7 @@ function base_manganame_chapternum_pagenum_downloader()
 				rm -f temporary.html
 				if [ -z $imgurl ]
 				then
-					echo "All Chapters (`expr $chapternum - 1`) downloaded"
+					echo "All chapters (`expr $chapternum - 1`) downloaded"
 					cd ..
 					rmdir chapter-$chapternum
 					rm -f temporary.html
@@ -68,11 +68,11 @@ function base_manganame_chapternum_pagenum_downloader()
 					echo "and include the last URL: $url and image-URL: $imgurl"
 					exit 1
 				else
-					echo "Page #$pagenum of Chapter #$chapternum downloaded"
+					echo "Page #$pagenum of chapter #$chapternum downloaded"
 					pagenum=`expr $pagenum + 1`
 				fi
 			else
-				echo "All pages (`expr $pagenum - 1`) of Chapter #$chapternum downloaded"
+				echo "All pages (`expr $pagenum - 1`) of chapter #$chapternum downloaded"
 				pagenum=1
 				chapternum=`expr $chapternum + 1`
 			fi
@@ -86,7 +86,7 @@ function base_manganame_chapternum_pagenum_downloader()
 url=$1
 if [ ! $url ]
 then
-        echo "Usage $0 URL"
+        echo "Usage: $0 URL"
 else
 	if [ ! `echo $url | grep -E ^https?://` ]
 	then
