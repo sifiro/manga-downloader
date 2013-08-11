@@ -14,5 +14,7 @@ If that's not the problem, the website from where you were downloading has proba
 
 The script will create following directory structure:
 directory-where-you-ran-the-script/manga-name/chapter-xxx/page-xxx.jpg
+or
+directory-where-you-ran-the-script/manga-name/volume-xx/chapter-xxx/page-xxx.jpg
 
 Happy reading!
