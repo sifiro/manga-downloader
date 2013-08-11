@@ -4,7 +4,12 @@
 
 function imgurl_firstimgtag()
 {
-	imgurl=`cat temporary.html | awk '{split($0,a,"<img");$1=a[2];print $1}' | awk '{split($0,a,"src=\"");$1=a[2];print $1}' | awk '{split($0,a,"\"");$1=a[1];print $1}' | grep $manganame`
+	imgurl=`cat temporary.html | awk '{split($0,a,"<img");$1=a[2];print $1}' | awk '{split($0,a,"src=\"");$1=a[2];print $1}' | awk '{split($0,a,"\"");$1=a[1];print $1}'`
+}
+
+function imgurl_filter_manganame()
+{
+	imgurl=`echo $imgurl | grep $manganame`
 }
 
 function base_manganame_chapternum_pagenum_downloader()
@@ -34,7 +39,8 @@ function base_manganame_chapternum_pagenum_downloader()
 			wgetreturn=$?
 			if [ $wgetreturn -eq 0 ]
 			then
-				$imgurl_function
+				$imgurl_get
+				$imgurl_filter
 				rm -f temporary.html
 				if [ -z $imgurl ]
 				then
@@ -120,7 +126,8 @@ else
 			echo "and include the URL: $url"
 			exit 1
 		fi
-		imgurl_function="imgurl_firstimgtag"
+		imgurl_get="imgurl_firstimgtag"
+		imgurl_filter="imgurl_filter_manganame"
 		base_manganame_chapternum_pagenum_downloader
 		;;
 	esac
