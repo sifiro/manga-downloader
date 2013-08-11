@@ -237,7 +237,7 @@ else
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=1
-		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[^/]*$` ]
+		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[^/]*` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=1
@@ -262,6 +262,8 @@ else
 			volumenum="01"
 			chapternum="001"
 			pagenum=1
+		else
+			error_url
 		fi
 		imgurl_get="imgurl_firstimgtag"
 		imgurl_filter="imgurl_filter_firstresult"
