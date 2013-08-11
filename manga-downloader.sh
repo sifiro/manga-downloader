@@ -14,7 +14,7 @@ function imgurl_filter_manganame()
 
 function imgurl_filter_firstresult()
 {
-	imgurl=`echo $imgurl | grep http | head -n 1`
+	imgurl=`echo $imgurl | grep http | head -n 1 | cut -d ' ' -f 1`
 }
 
 function error_imgurl()
@@ -260,7 +260,18 @@ else
                 then
                         manganame=`echo $url | cut -d / -f 5`
 			volumenum="01"
-			chapternum="001"
+			url="http://$base/manga/$manganame/v$volumenum/c000/1.html"
+			rm -f temporary.html
+			wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $url -O temporary.html
+			imgurl_firstimgtag
+			imgurl_filter_firstresult
+			rm -f temporary.html
+			if [ `echo $imgurl | grep http` ]
+			then
+				chapternum="000"
+			else
+				chapternum="001"
+			fi
 			pagenum=1
 		else
 			error_url
