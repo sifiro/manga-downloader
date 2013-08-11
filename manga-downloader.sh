@@ -12,6 +12,20 @@ function imgurl_filter_manganame()
 	imgurl=`echo $imgurl | grep $manganame`
 }
 
+function error_imgurl()
+{
+	echo "This shouldn't happen. Please report a bug at github.com/briefbanane/manga-downloader"
+	echo "and include the last URL: $url and image-URL: $imgurl"
+	exit 2
+}
+
+function error_url()
+{
+	echo "Cannot handle URL, please report a bug at github.com/briefbanane/manga-donwloader"
+	echo "and include the URL: $url"
+	exit 1
+}
+
 function base_manganame_chapternum_pagenum_downloader()
 {
 	mkdir -p $manganame
@@ -64,9 +78,7 @@ function base_manganame_chapternum_pagenum_downloader()
 				wgetreturn=$?
 				if [ $wgetreturn -ne 0 ]
 				then
-					echo "This shouldn't happen. Please report a bug at github.com/briefbanane/manga-downloader"
-					echo "and include the last URL: $url and image-URL: $imgurl"
-					exit 1
+					error_imgurl
 				else
 					echo "Page #$pagenum of chapter #$chapternum downloaded"
 					pagenum=`expr $pagenum + 1`
@@ -124,9 +136,7 @@ else
 			chapternum=1
 			pagenum=1
 		else
-			echo "Cannot handle URL, please report a bug at github.com/briefbanane/manga-donwloader"
-			echo "and include the URL: $url"
-			exit 1
+			error_url
 		fi
 		imgurl_get="imgurl_firstimgtag"
 		imgurl_filter="imgurl_filter_manganame"
