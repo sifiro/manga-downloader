@@ -90,27 +90,27 @@ else
 	"www.mangareader.net" | "www.mangapanda.com")
 		site=`echo $base | cut -d . -f 2`
 		tld=`echo $base | cut -d . -f 3`
-		if [ `echo $url | grep -E ^http://www\.$site\.$tld/[0-9]*-[0-9]*-[0-9]*/[^/]*/chapter-[0-9]*\.html` ]
+		if [ `echo $url | grep -E ^https?://www\.$site\.$tld/[0-9]*-[0-9]*-[0-9]*/[^/]*/chapter-[0-9]*\.html` ]
 		then
 			manganame=`echo $url | cut -d / -f 5`
 			chapternum=`echo $url | cut -d / -f 6 | cut -d - -f 2 | cut -d . -f 1`
 			pagenum=`echo $url | cut -d / -f 4 | cut -d - -f 3`
-		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[0-9]*/[^/]*.html` ]
+		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[0-9]*/[^/]*.html` ]
 		then
 			manganame=`echo $url | cut -d / -f 5 | awk '{split($0,a,".html");$1=a[1];print $1}'`
 			chapternum=1
 			pagenum=1
-		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*/[0-9]*/[0-9]*` ]
+		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[^/]*/[0-9]*/[0-9]*` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=`echo $url | cut -d / -f 6`
-		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*/[0-9]*` ]
+		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[^/]*/[0-9]*` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=`echo $url | cut -d / -f 5`
 			pagenum=1
-		elif [ `echo $url | grep -E ^http://www\.$site\.$tld/[^/]*$` ]
+		elif [ `echo $url | grep -E ^https?://www\.$site\.$tld/[^/]*$` ]
 		then
 			manganame=`echo $url | cut -d / -f 4`
 			chapternum=1
