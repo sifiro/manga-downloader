@@ -44,9 +44,10 @@ function base_manganame_chapternum_pagenum_downloader()
 				rm -f temporary.html
 				if [ -z $imgurl ]
 				then
-					cd ..
 					echo "All Chapters (`expr $chapternum - 1`) downloaded"
+					cd ..
 					rmdir chapter-$chapternum
+					rm -f temporary.html
 					exit 0
 				fi
 				if [ $pagenum -lt 100 ]
@@ -76,6 +77,7 @@ function base_manganame_chapternum_pagenum_downloader()
 				chapternum=`expr $chapternum + 1`
 			fi
 		done
+		rm -f temporary.html
 		cd ..
 	done
 }
