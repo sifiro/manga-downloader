@@ -17,4 +17,11 @@ directory-where-you-ran-the-script/manga-name/chapter-xxx/page-xxx.jpg
 or
 directory-where-you-ran-the-script/manga-name/volume-xx/chapter-xxx/page-xxx.jpg
 
+Supported sites are currently:
+mangareader.net
+mangapanda.com
+mangafox.me (Strange chapters like 7.5, etc. are NOT supported)
+
+If you want another site to be supported, please file a bug report.
+
 Happy reading!
