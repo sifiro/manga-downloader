@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #Copyright 2013 Fabian Ebner
 #Published under the GPLv3 or any later version, see the file COPYING for details
 
