@@ -331,26 +331,26 @@ else
 		echo "Retrieving URL list..."
 		wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c `echo $url | cut -d / -f 1-5` -O temporary.html
 		echo "done"
-		echo "Catching up to desired chapter... (this could take a while)"
+		echo "Catching up to desired chapter..."
+		grep -E href\=\"https?://mangafox\.me/manga/[^/]*/v[^/]*/c[^/]*/[0-9]*\.html\" temporary.html > temporary2.html 
+		cut -d \" -f 2 temporary2.html > temporary.html 
+		rm -f temporary2.html
 		for word in `tac temporary.html`
 		do
 			if [ $found -ne 1 ]
 			then
-				if [ `echo $word | grep -E ^href\=\"https?://mangafox\.me/manga/[^/]*/v$volumenum/c$chapternum/[0-9]*\.html\"` ]
+				if [ `echo $word | grep -E https?://mangafox\.me/manga/[^/]*/v$volumenum/c$chapternum/[0-9]*\.html` ]
 				then
 					found=1
 				fi
 			fi
 			if [ $found -eq 1 ]
 			then
-				if [ `echo $word | grep -E ^href\=\"https?://mangafox\.me/manga/[^/]*/v[^/]*/c[^/]*/[0-9]*\.html\"` ]
-				then
-					url=`echo $word | cut -d \" -f 2 | cut -d \" -f 1`
-					volumenum=`echo $url | cut -d / -f 6 | cut -d v -f 2`
-					chapternum=`echo $url | cut -d / -f 7 | cut -d c -f 2`
-					pagenum=`echo $url | cut -d / -f 8 | cut -d . -f 1`
-					mangafox_download_chapter
-				fi
+				url=`echo $word | cut -d \" -f 2 | cut -d \" -f 1`
+				volumenum=`echo $url | cut -d / -f 6 | cut -d v -f 2`
+				chapternum=`echo $url | cut -d / -f 7 | cut -d c -f 2`
+				pagenum=`echo $url | cut -d / -f 8 | cut -d . -f 1`
+				mangafox_download_chapter
 			fi
 		done
 		rm -f temporary.html
