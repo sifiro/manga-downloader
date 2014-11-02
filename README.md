@@ -5,7 +5,7 @@ The script should work under Unix-like operating systems (Linux, FreeBSD, OSX,..
 For the MS Windows folks, you could try something like http://win-bash.sourceforge.net/ (don't know how good this works, but don't be afraid to test).
 The script is licensed under the GPLv3 or any later version and comes without ANY KIND OF WARRANTY.
 
-Run the script with a given mangareader.net-URL and the script will start downloading all following pages of the manga or the rest of the chapter (mangafox.me), including the one with the given URL.
+Run the script with a given mangareader.net-URL and the script will start downloading all following pages of the manga, including the one with the given URL.
 For example ./mangareader.net-downloader http://www.mangareader.net/93-2-1/naruto/chapter-2.html will download all pages of Naruto, starting with the second chapter.
 Note: If the URL is a manga description pages like http://www.mangareader.net/93/naruto.html it will start downloading at chapter one, page one.
 
