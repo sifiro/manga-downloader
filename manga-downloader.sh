@@ -202,10 +202,68 @@ function base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader()
 	done
 }
 
+function mangafox_download_chapter()
+{
+	if [ ! -d `echo v$volumenum` ]
+	then
+		mkdir `echo v$volumenum`
+	fi
+	cd `echo v$volumenum`
+	if [ ! -d `echo c$chapternum` ]
+	then
+		mkdir `echo c$chapternum`
+	fi
+	cd `echo c$chapternum`
+	echo "Downloading chapter $chapternum of volume $volumenum"
+	wgetreturn=0
+	while [ $wgetreturn -eq 0 ]
+	do
+		url="http://$base/manga/$manganame/v$volumenum/c$chapternum/$pagenum.html"
+		rm -f temporary.html
+		wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $url -O temporary.html
+		wgetreturn=$?
+		if [ $wgetreturn -eq 0 ]
+		then
+			$imgurl_get
+			$imgurl_filter
+			rm -f temporary.html
+			if [ -z $imgurl ]
+			then
+				rm -f temporary.html
+			fi
+			if [ $pagenum -lt 100 ]
+				then
+				if [ $pagenum -lt 10 ]
+				then
+					wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $imgurl -O page-00$pagenum.jpg
+				else
+					wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $imgurl -O page-0$pagenum.jpg
+				fi
+			else
+				wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $imgurl -O page-$pagenum.jpg
+			fi
+			wgetreturn=$?
+			if [ $wgetreturn -ne 0 ]
+			then
+				error_imgurl
+			else
+				echo "Page #$pagenum of chapter #$chapternum downloaded"
+				pagenum=`expr $pagenum + 1`
+			fi
+		else
+			echo "All pages (`expr $pagenum - 1`) of chapter #$chapternum downloaded"
+			pagenum=1
+		fi
+	done
+	wgetreturn=0
+	rm -f temporary.html
+	cd ../..
+}
+
 url=$1
 if [ ! $url ]
 then
-        echo "Usage: $0 URL"
+	echo "Usage: $0 URL"
 else
 	if [ ! `echo $url | grep -E ^https?://` ]
 	then
@@ -215,6 +273,8 @@ else
 	base=`echo $url | cut -d / -f 3`
 	case $base in
 	"www.mangareader.net" | "www.mangapanda.com")
+		imgurl_get="imgurl_firstimgtag"
+		imgurl_filter="imgurl_filter_manganame"
 		site=`echo $base | cut -d . -f 2`
 		tld=`echo $base | cut -d . -f 3`
 		if [ `echo $url | grep -E ^https?://www\.$site\.$tld/[0-9]*-[0-9]*-[0-9]*/[^/]*/chapter-[0-9]*\.html` ]
@@ -245,40 +305,41 @@ else
 		else
 			error_url
 		fi
-		imgurl_get="imgurl_firstimgtag"
-		imgurl_filter="imgurl_filter_manganame"
 		base_manganame_chapternum_pagenum_downloader
 		;;
 	"mangafox.me")
-		if [ `echo $url | grep -E ^https?://mangafox\.me/manga/[^/]*/v[0-9][0-9]/c[0-9][0-9][0-9]/[0-9]*\.html` ]
-                then
-                        manganame=`echo $url | cut -d / -f 5`
+		imgurl_get="imgurl_firstimgtag"
+		imgurl_filter="imgurl_filter_firstresult"
+		if [ `echo $url | grep -E ^https?://mangafox\.me/manga/[^/]*/v[^/]*/c[^/]*/[0-9]*\.html` ]
+		then
+			manganame=`echo $url | cut -d / -f 5`
+			mkdir -p $manganame
+			cd $manganame
 			volumenum=`echo $url | cut -d / -f 6 | cut -d v -f 2`
 			chapternum=`echo $url | cut -d / -f 7 | cut -d c -f 2`
 			pagenum=`echo $url | cut -d / -f 8 | cut -d . -f 1`
 		elif [ `echo $url | grep -E ^https?://mangafox.me/manga/[^/]*` ]
-                then
-                        manganame=`echo $url | cut -d / -f 5`
-			volumenum="01"
-			url="http://$base/manga/$manganame/v$volumenum/c000/1.html"
-			rm -f temporary.html
+		then
+			manganame=`echo $url | cut -d / -f 5`
+			mkdir -p $manganame
+			cd $manganame
 			wget --quiet -U "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirect=0 -t inf -c $url -O temporary.html
-			imgurl_firstimgtag
-			imgurl_filter_firstresult
-			rm -f temporary.html
-			if [ `echo $imgurl | grep http` ]
-			then
-				chapternum="000"
-			else
-				chapternum="001"
-			fi
-			pagenum=1
+			for word in `cat temporary.html`
+			do
+				if [ `echo $word | grep -E ^href\=\"https?://mangafox\.me/manga/[^/]*/v[^/]*/c[^/]*/1\.html\"` ]
+				then
+					url=`echo $word | cut -d \" -f 2 | cut -d \" -f 1`
+					volumenum=`echo $url | cut -d / -f 6 | cut -d v -f 2`
+					chapternum=`echo $url | cut -d / -f 7 | cut -d c -f 2`
+					pagenum=1
+					mangafox_download_chapter
+				fi
+			done
+			exit 0
 		else
 			error_url
 		fi
-		imgurl_get="imgurl_firstimgtag"
-		imgurl_filter="imgurl_filter_firstresult"
-		base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader
+		mangafox_download_chapter
 		;;
 	esac
 fi
