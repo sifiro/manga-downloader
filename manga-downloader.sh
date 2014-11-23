@@ -19,14 +19,14 @@ function imgurl_filter_firstresult()
 
 function error_imgurl()
 {
-	echo "This shouldn't happen. Please report a bug at github.com/briefbanane/manga-downloader"
+	echo "This shouldn't happen. Please try again and if it still fails, report a bug at github.com/briefbanane/manga-downloader"
 	echo "and include the last URL: $url and image-URL: $imgurl"
 	exit 2
 }
 
 function error_url()
 {
-	echo "Cannot handle URL, please report a bug at github.com/briefbanane/manga-donwloader"
+	echo "Cannot handle URL. Please check again and eventually report a bug at github.com/briefbanane/manga-donwloader"
 	echo "and include the URL: $url"
 	exit 1
 }
