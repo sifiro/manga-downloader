@@ -74,6 +74,7 @@ function base_manganame_chapternum_pagenum_downloader()
 						echo "All pages (`expr $pagenum - 1`) of chapter #$chapternum downloaded"
 						pagenum=1
 						chapternum=`expr $chapternum + 1`
+						curlreturn=1
 					fi
 				else
 					if [ $pagenum -lt 100 ]
