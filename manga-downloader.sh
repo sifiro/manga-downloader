@@ -63,30 +63,38 @@ function base_manganame_chapternum_pagenum_downloader()
 				rm -f temporary.html
 				if [ -z $imgurl ]
 				then
-					echo "All chapters (`expr $chapternum - 1`) downloaded"
-					cd ..
-					rmdir chapter-$chapternum
-					rm -f temporary.html
-					exit 0
-				fi
-				if [ $pagenum -lt 100 ]
+					if [ $pagenum -eq 1 ]
 					then
-					if [ $pagenum -lt 10 ]
-					then
-						curl --retry 5 -s $imgurl -o page-00$pagenum.jpg
+						echo "All chapters (`expr $chapternum - 1`) downloaded"
+						cd ..
+						rmdir chapter-$chapternum
+						rm -f temporary.html
+						exit 0
 					else
-						curl --retry 5 -s $imgurl -o page-0$pagenum.jpg
+						echo "All pages (`expr $pagenum - 1`) of chapter #$chapternum downloaded"
+						pagenum=1
+						chapternum=`expr $chapternum + 1`
 					fi
 				else
-					curl --retry 5 -s $imgurl -o page-$pagenum.jpg
-				fi
-				curlreturn=$?
-				if [ $curlreturn -ne 0 ]
-				then
-					error_imgurl
-				else
-					echo "Page #$pagenum of chapter #$chapternum downloaded"
-					pagenum=`expr $pagenum + 1`
+					if [ $pagenum -lt 100 ]
+						then
+						if [ $pagenum -lt 10 ]
+						then
+							curl --retry 5 -s $imgurl -o page-00$pagenum.jpg
+						else
+							curl --retry 5 -s $imgurl -o page-0$pagenum.jpg
+						fi
+					else
+						curl --retry 5 -s $imgurl -o page-$pagenum.jpg
+					fi
+					curlreturn=$?
+					if [ $curlreturn -ne 0 ]
+					then
+						error_imgurl
+					else
+						echo "Page #$pagenum of chapter #$chapternum downloaded"
+						pagenum=`expr $pagenum + 1`
+					fi
 				fi
 			else
 				echo "All pages (`expr $pagenum - 1`) of chapter #$chapternum downloaded"
