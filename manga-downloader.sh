@@ -231,6 +231,10 @@ function mangafox_download_chapter()
 		rm -f temporary.html
 		curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $url -o temporary.html
 		curlreturn=$?
+		if [ ! -e temporary.html ]
+		then
+			curlreturn=1
+		fi
 		if [ $curlreturn -eq 0 ]
 		then
 			$imgurl_get
