@@ -20,7 +20,7 @@ function imgurl_filter_firstresult()
 function error_imgurl()
 {
 	echo "This shouldn't happen. Please try again and if it still fails, report a bug at github.com/briefbanane/manga-downloader"
-	echo "and include the last URL: $url and image-URL: $imgurl"
+	echo "and include the last URL: $url image-URL: $imgurl and curl-return: $curlreturn"
 	exit 2
 }
 
@@ -29,6 +29,16 @@ function error_url()
 	echo "Cannot handle URL. Please check again and eventually report a bug at github.com/briefbanane/manga-donwloader"
 	echo "and include the URL: $url"
 	exit 1
+}
+
+function download()
+{
+	curlreturn=18
+	while [ $curlreturn -eq 18 ]
+	do
+		curl -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $1 -o $2 --retry 5 -C -
+		curlreturn=$?
+	done
 }
 
 function base_manganame_chapternum_pagenum_downloader()
@@ -40,8 +50,7 @@ function base_manganame_chapternum_pagenum_downloader()
 	do
 		url="http://$base/$manganame/$chapternum/$pagenum"
 		rm -f temporary.html
-		curl --retry 5 -s $url -o temporary.html
-		curlreturn=$?
+		download $url "temporary.html"
 		if [ $curlreturn -ne 0 ]
 		then
 			echo "All chapters (`expr $chapternum - 1`) downloaded"
@@ -54,8 +63,7 @@ function base_manganame_chapternum_pagenum_downloader()
 		do
 			url="http://$base/$manganame/$chapternum/$pagenum"
 			rm -f temporary.html
-			curl --retry 5 -s $url -o temporary.html
-			curlreturn=$?
+			download $url "temporary.html"
 			if [ $curlreturn -eq 0 ]
 			then
 				$imgurl_get
@@ -81,14 +89,13 @@ function base_manganame_chapternum_pagenum_downloader()
 						then
 						if [ $pagenum -lt 10 ]
 						then
-							curl --retry 5 -s $imgurl -o page-00$pagenum.jpg
+							download $imgurl "page-00$pagenum.jpg"
 						else
-							curl --retry 5 -s $imgurl -o page-0$pagenum.jpg
+							download $imgurl "page-0$pagenum.jpg"
 						fi
 					else
-						curl --retry 5 -s $imgurl -o page-$pagenum.jpg
+						download $imgurl "page-$pagenum.jpg"
 					fi
-					curlreturn=$?
 					if [ $curlreturn -ne 0 ]
 					then
 						error_imgurl
@@ -117,8 +124,7 @@ function base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader()
 	do
 		url="http://$base/manga/$manganame/v$volumenum/c$chapternum/$pagenum.html"
 		rm -f temporary.html
-		curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $url -o temporary.html
-		curlreturn=$?
+		download $url "temporary.html"
 		if [ $curlreturn -ne 0 ]
 		then
 			echo "All volumes (`expr $volumenum - 1`) downloaded"
@@ -131,8 +137,7 @@ function base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader()
 		do
 			url="http://$base/manga/$manganame/v$volumenum/c$chapternum/$pagenum.html"
 			rm -f temporary.html
-			curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $url -o temporary.html
-			curlreturn=$?
+			download $url "temporary.html"
 			if [ $curlreturn -ne 0 ]
 			then
 				echo "All chapters up to (`expr $chapternum - 1`) from volume $volumenum downloaded"
@@ -149,8 +154,7 @@ function base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader()
 				do
 					url="http://$base/manga/$manganame/v$volumenum/c$chapternum/$pagenum.html"
 					rm -f temporary.html
-					curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $url -o temporary.html
-					curlreturn=$?
+					download $url "temporary.html"
 					if [ $curlreturn -eq 0 ]
 					then
 						$imgurl_get
@@ -171,14 +175,13 @@ function base_manga_manganame_vvolumenum_cchapternum_pagenum_html_downloader()
 							then
 							if [ $pagenum -lt 10 ]
 							then
-								curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-00$pagenum.jpg
+								download $imgurl "page-00$pagenum.jpg"
 							else
-								curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-0$pagenum.jpg
+								download $imgurl "page-00$pagenum.jpg"
 							fi
 						else
-							curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-$pagenum.jpg
+							download $imgurl "page-00$pagenum.jpg"
 						fi
-						curlreturn=$?
 						if [ $curlreturn -ne 0 ]
 						then
 							error_imgurl
@@ -229,8 +232,7 @@ function mangafox_download_chapter()
 	do
 		url="http://$base/manga/$manganame/v$volumenum/c$chapternum/$pagenum.html"
 		rm -f temporary.html
-		curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $url -o temporary.html
-		curlreturn=$?
+		download $url "temporary.html"
 		if [ ! -e temporary.html ]
 		then
 			curlreturn=1
@@ -248,14 +250,13 @@ function mangafox_download_chapter()
 				then
 				if [ $pagenum -lt 10 ]
 				then
-					curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-00$pagenum.jpg
+					download $imgurl "page-00$pagenum.jpg"
 				else
-					curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-0$pagenum.jpg
+					download $imgurl "page-0$pagenum.jpg"
 				fi
 			else
-				curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $imgurl -o page-$pagenum.jpg
+				download $imgurl "page-$pagenum.jpg"
 			fi
-			curlreturn=$?
 			if [ $curlreturn -ne 0 ]
 			then
 				error_imgurl
@@ -342,7 +343,8 @@ else
 			error_url
 		fi
 		echo "Retrieving URL list..."
-		curl --retry 5 -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 `echo $url | cut -d / -f 1-5` -o temporary.html
+		rm -f temporary.html
+		download "`echo $url | cut -d / -f 1-5`" "temporary.html"
 		echo "done"
 		echo "Catching up to desired chapter..."
 		grep -E href\=\"https?://mangafox\.me/manga/[^/]*/v[^/]*/c[^/]*/[0-9]*\.html\" temporary.html > temporary2.html 
