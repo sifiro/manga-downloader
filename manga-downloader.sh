@@ -36,7 +36,7 @@ function download()
 	curlreturn=18
 	while [ $curlreturn -eq 18 ]
 	do
-		curl -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $1 -o $2 --retry 5 -C -
+		curl -s -A "Mozilla/5.0 (X11; Linux x86_64; rv:23.0)" --max-redirs 0 $1 -o $2 -C -
 		curlreturn=$?
 	done
 }
