@@ -89,12 +89,12 @@ function base_manganame_chapternum_pagenum_downloader()
 						then
 						if [ $pagenum -lt 10 ]
 						then
-							download $imgurl "page-00$pagenum.jpg"
+							download $imgurl "00$pagenum.jpg"
 						else
-							download $imgurl "page-0$pagenum.jpg"
+							download $imgurl "0$pagenum.jpg"
 						fi
 					else
-						download $imgurl "page-$pagenum.jpg"
+						download $imgurl "$pagenum.jpg"
 					fi
 					if [ $curlreturn -ne 0 ]
 					then
